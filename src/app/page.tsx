@@ -1,103 +1,158 @@
-import Image from "next/image";
+"use client";
+import { useCallback, useEffect, useState } from "react";
+import PlayerCard from "./components/playerCard";
+import { noteHandler, renderColour, renderValue } from "./utils/global";
 
 export default function Home() {
+  const initialState = [null, null, null, null, null, null, null, null, null];
+  const [playerNumber, setPlayerNumber] = useState(1);
+  const [winner, setWinner] = useState<number | null>(null);
+  const [board, setBoard] = useState<(number | null)[]>(initialState);
+  const [player1Instrument, setPlayer1Instrument] = useState("Guitar");
+  const [player2Instrument, setPlayer2Instrument] = useState("Guitar");
+  const [player1Score, setPlayer1Score] = useState(0);
+  const [player2Score, setPlayer2Score] = useState(0);
+
+  const isBoardFull = board.every((value) => value !== null);
+
+  function handleClick(index: number) {
+    noteHandler(
+      index,
+      playerNumber === 1 ? player1Instrument : player2Instrument
+    );
+    setBoard(board.map((value, i) => (i === index ? playerNumber : value)));
+    setPlayerNumber(playerNumber === 1 ? 2 : 1);
+  }
+
+  function handleBoardReset() {
+    if (winner === 1) {
+      setPlayer1Score(player1Score + 1);
+    }
+    if (winner === 2) {
+      setPlayer2Score(player2Score + 1);
+    }
+    setBoard(initialState);
+    setPlayerNumber(1);
+    setWinner(null);
+  }
+
+  const winningChord = useCallback(
+    (index1: number, index2: number, index3: number, instrument: string) => {
+      noteHandler(index1, instrument);
+      noteHandler(index2, instrument);
+      noteHandler(index3, instrument);
+    },
+    []
+  );
+
+  const checkWinner = useCallback(() => {
+    const winningCombos = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    for (let i = 0; i < winningCombos.length; i++) {
+      const [a, b, c] = winningCombos[i];
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        setWinner(board[a]);
+        setPlayerNumber(board[a]);
+        if (board[a] === 1) {
+          winningChord(a, b, c, player1Instrument);
+        } else if (board[a] === 2) {
+          winningChord(a, b, c, player2Instrument);
+        }
+        return board[a];
+      }
+    }
+    return null;
+  }, [board, winningChord]);
+
+  useEffect(() => {
+    checkWinner();
+  }, [board, checkWinner]);
+
+  function Cell({ index }: { index: number }) {
+    return (
+      <div className="flex items-center justify-center">
+        <button
+          className="text-6xl font-bold flex items-center justify-center w-30 h-30 bg-black rounded"
+          onClick={() => handleClick(index)}
+        >
+          {renderValue(board[index], player1Instrument, player2Instrument)}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+        <h1 className="text-4xl font-bold text-center w-full">Tic Tac Toe</h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+        {winner ? (
+          <div className="flex flex-col gap-4">
+            <h2
+              className={`text-3xl font-bold w-full text-center ${
+                winner === 1 ? "text-blue-600" : "text-red-600"
+              }`}
+            >
+              The winner is player {winner}!
+            </h2>
+            <button
+              className="bg-slate-500 rounded p-2 self-center text-xl"
+              onClick={() => handleBoardReset()}
+            >
+              Reset
+            </button>
+          </div>
+        ) : isBoardFull ? (
+          <div className="flex flex-col gap-4 justify-center items-center w-full">
+            <h2 className="text-3xl font-bold w-full text-center">
+              Draw!
+            </h2>
+            <button
+              className="bg-slate-500 rounded p-2 self-center text-xl"
+              onClick={() => handleBoardReset()}
+            >
+              Reset
+            </button>
+          </div>
+        ) : (
+          <div className={`${renderColour(playerNumber)} rounded`}>
+            <div className="grid grid-cols-5 grid-rows-1 gap-2">
+              <PlayerCard
+                playerNumber={1}
+                playerScore={player1Score}
+                instrument={player1Instrument}
+                selectInstrument={setPlayer1Instrument}
+              />
+              <div className="col-span-3 grid grid-cols-3 gap-y-6 gap-x-0 my-4">
+                <Cell index={0} />
+                <Cell index={1} />
+                <Cell index={2} />
+                <Cell index={3} />
+                <Cell index={4} />
+                <Cell index={5} />
+                <Cell index={6} />
+                <Cell index={7} />
+                <Cell index={8} />
+              </div>
+              <PlayerCard
+                playerNumber={2}
+                playerScore={player2Score}
+                instrument={player2Instrument}
+                selectInstrument={setPlayer2Instrument}
+              />
+            </div>
+          </div>
+        )}
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
