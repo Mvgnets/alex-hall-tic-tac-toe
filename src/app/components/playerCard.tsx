@@ -21,12 +21,12 @@ export default function PlayerCard({
       <div className="px-2 lg:px-5 gap-1 flex flex-col">
         <div>
           <div>Score</div>
-          <div className="bg-black text-white">{playerScore}</div>
+          <div className="bg-black text-slate-300">{playerScore}</div>
         </div>
         <div>
           <div>Instrument</div>
           <select
-            className="bg-black text-white rounded p-2"
+            className="bg-black text-slate-300 rounded p-2"
             onChange={(e) => selectInstrument(e.target.value)}
             value={instrument}
           >
