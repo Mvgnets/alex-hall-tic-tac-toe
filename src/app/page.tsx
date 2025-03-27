@@ -17,7 +17,6 @@ export default function Home() {
   const [player1Score, setPlayer1Score] = useState(0);
   const [player2Score, setPlayer2Score] = useState(0);
   const [isLandscape, setIsLandscape] = useState(true);
-
   const isBoardFull = board.every((value) => value !== null);
 
   function handleClick(index: number) {
@@ -41,16 +40,17 @@ export default function Home() {
     setWinner(null);
   }
 
-  const winningChord = useCallback(
-    (index1: number, index2: number, index3: number, instrument: string) => {
+  const checkWinner = useCallback(() => {
+    function winningChord(
+      index1: number,
+      index2: number,
+      index3: number,
+      instrument: string
+    ) {
       setTimeout(() => noteHandler(index1, instrument), 500);
       setTimeout(() => noteHandler(index2, instrument), 750);
       setTimeout(() => noteHandler(index3, instrument), 1000);
-    },
-    []
-  );
-
-  const checkWinner = useCallback(() => {
+    }
     const winningCombos = [
       [0, 1, 2],
       [3, 4, 5],
@@ -76,7 +76,7 @@ export default function Home() {
       }
     }
     return null;
-  }, [board, player1Instrument, player2Instrument, winningChord]);
+  }, [board, player1Instrument, player2Instrument]);
 
   useEffect(() => {
     checkWinner();
