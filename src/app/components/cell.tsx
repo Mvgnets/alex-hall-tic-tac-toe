@@ -18,7 +18,7 @@ export default function Cell({
   return (
     <div className="flex items-center justify-center">
       <button
-        className="text-6xl font-bold flex items-center justify-center w-22 h-22 md:w-30 md:h-30 bg-black rounded shadow-lg shadow-black"
+        className="text-6xl font-bold flex items-center justify-center w-22 h-22 lg:w-30 lg:h-30 bg-black rounded shadow-lg shadow-black"
         onClick={() => handleClick(index)}
       >
         {renderValue(board[index], player1Instrument, player2Instrument)}

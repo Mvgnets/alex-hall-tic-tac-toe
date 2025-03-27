@@ -98,9 +98,9 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen pb-20 md:gap-16 md:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col md:gap-[32px] row-start-2 items-center sm:items-start">
-        <h1 className="text-3xl md:text-4xl font-bold text-center w-full">
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen pb-20 lg:gap-16 lg:p-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col lg:gap-[32px] row-start-2 items-center sm:items-start">
+        <h1 className="text-3xl lg:text-4xl font-bold text-center w-full">
           Tic Tac Toe
         </h1>
         {!isLandscape ? (
@@ -115,14 +115,14 @@ export default function Home() {
               playerNumber
             )} rounded shadow-lg shadow-slate-700`}
           >
-            <div className="grid grid-cols-5 grid-rows-1 md:gap-2">
+            <div className="grid grid-cols-5 grid-rows-1 lg:gap-2">
               <PlayerCard
                 playerNumber={1}
                 playerScore={player1Score}
                 instrument={player1Instrument}
                 selectInstrument={setPlayer1Instrument}
               />
-              <div className="col-span-3 grid grid-cols-3 gap-y-4 md:gap-y-6 gap-x-0 my-4">
+              <div className="col-span-3 grid grid-cols-3 gap-y-4 lg:gap-y-6 gap-x-0 my-4">
                 <Cell
                   index={0}
                   handleClick={handleClick}
