@@ -5,6 +5,7 @@ import { noteHandler, renderColour } from "./utils/global";
 import Winner from "./components/winner";
 import Draw from "./components/draw";
 import Cell from "./components/cell";
+import RotatePhone from "./components/rotatePhone";
 
 export default function Home() {
   const initialState = [null, null, null, null, null, null, null, null, null];
@@ -15,6 +16,7 @@ export default function Home() {
   const [player2Instrument, setPlayer2Instrument] = useState("Guitar");
   const [player1Score, setPlayer1Score] = useState(0);
   const [player2Score, setPlayer2Score] = useState(0);
+  const [isLandscape, setIsLandscape] = useState(true);
 
   const isBoardFull = board.every((value) => value !== null);
 
@@ -80,25 +82,47 @@ export default function Home() {
     checkWinner();
   }, [board, checkWinner]);
 
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <h1 className="text-4xl font-bold text-center w-full">Tic Tac Toe</h1>
+  useEffect(() => {
+    const checkOrientation = () => {
+      const isLandscapeMode = window.matchMedia(
+        "(orientation: landscape)"
+      ).matches;
+      setIsLandscape(isLandscapeMode);
+    };
 
-        {winner ? (
+    checkOrientation();
+    window.addEventListener("resize", checkOrientation);
+    return () => {
+      window.removeEventListener("resize", checkOrientation);
+    };
+  }, []);
+
+  return (
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen pb-20 md:gap-16 md:p-20 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col md:gap-[32px] row-start-2 items-center sm:items-start">
+        <h1 className="text-3xl md:text-4xl font-bold text-center w-full">
+          Tic Tac Toe
+        </h1>
+        {!isLandscape ? (
+          <RotatePhone />
+        ) : winner ? (
           <Winner winner={winner} handleBoardReset={handleBoardReset} />
         ) : isBoardFull ? (
           <Draw handleBoardReset={handleBoardReset} />
         ) : (
-          <div className={`${renderColour(playerNumber)} rounded shadow-lg shadow-slate-700`}>
-            <div className="grid grid-cols-5 grid-rows-1 gap-2">
+          <div
+            className={`${renderColour(
+              playerNumber
+            )} rounded shadow-lg shadow-slate-700`}
+          >
+            <div className="grid grid-cols-5 grid-rows-1 md:gap-2">
               <PlayerCard
                 playerNumber={1}
                 playerScore={player1Score}
                 instrument={player1Instrument}
                 selectInstrument={setPlayer1Instrument}
               />
-              <div className="col-span-3 grid grid-cols-3 gap-y-6 gap-x-0 my-4">
+              <div className="col-span-3 grid grid-cols-3 gap-y-4 md:gap-y-6 gap-x-0 my-4">
                 <Cell
                   index={0}
                   handleClick={handleClick}
