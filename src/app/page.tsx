@@ -1,7 +1,10 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import PlayerCard from "./components/playerCard";
-import { noteHandler, renderColour, renderValue } from "./utils/global";
+import { noteHandler, renderColour } from "./utils/global";
+import Winner from "./components/winner";
+import Draw from "./components/draw";
+import Cell from "./components/cell";
 
 export default function Home() {
   const initialState = [null, null, null, null, null, null, null, null, null];
@@ -38,9 +41,9 @@ export default function Home() {
 
   const winningChord = useCallback(
     (index1: number, index2: number, index3: number, instrument: string) => {
-      noteHandler(index1, instrument);
-      noteHandler(index2, instrument);
-      noteHandler(index3, instrument);
+      setTimeout(() => noteHandler(index1, instrument), 500);
+      setTimeout(() => noteHandler(index2, instrument), 750);
+      setTimeout(() => noteHandler(index3, instrument), 1000);
     },
     []
   );
@@ -71,24 +74,11 @@ export default function Home() {
       }
     }
     return null;
-  }, [board, winningChord]);
+  }, [board, player1Instrument, player2Instrument, winningChord]);
 
   useEffect(() => {
     checkWinner();
   }, [board, checkWinner]);
-
-  function Cell({ index }: { index: number }) {
-    return (
-      <div className="flex items-center justify-center">
-        <button
-          className="text-6xl font-bold flex items-center justify-center w-30 h-30 bg-black rounded"
-          onClick={() => handleClick(index)}
-        >
-          {renderValue(board[index], player1Instrument, player2Instrument)}
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -96,35 +86,11 @@ export default function Home() {
         <h1 className="text-4xl font-bold text-center w-full">Tic Tac Toe</h1>
 
         {winner ? (
-          <div className="flex flex-col gap-4">
-            <h2
-              className={`text-3xl font-bold w-full text-center ${
-                winner === 1 ? "text-blue-600" : "text-red-600"
-              }`}
-            >
-              The winner is player {winner}!
-            </h2>
-            <button
-              className="bg-slate-500 rounded p-2 self-center text-xl"
-              onClick={() => handleBoardReset()}
-            >
-              Reset
-            </button>
-          </div>
+          <Winner winner={winner} handleBoardReset={handleBoardReset} />
         ) : isBoardFull ? (
-          <div className="flex flex-col gap-4 justify-center items-center w-full">
-            <h2 className="text-3xl font-bold w-full text-center">
-              Draw!
-            </h2>
-            <button
-              className="bg-slate-500 rounded p-2 self-center text-xl"
-              onClick={() => handleBoardReset()}
-            >
-              Reset
-            </button>
-          </div>
+          <Draw handleBoardReset={handleBoardReset} />
         ) : (
-          <div className={`${renderColour(playerNumber)} rounded`}>
+          <div className={`${renderColour(playerNumber)} rounded shadow-lg shadow-slate-700`}>
             <div className="grid grid-cols-5 grid-rows-1 gap-2">
               <PlayerCard
                 playerNumber={1}
@@ -133,15 +99,69 @@ export default function Home() {
                 selectInstrument={setPlayer1Instrument}
               />
               <div className="col-span-3 grid grid-cols-3 gap-y-6 gap-x-0 my-4">
-                <Cell index={0} />
-                <Cell index={1} />
-                <Cell index={2} />
-                <Cell index={3} />
-                <Cell index={4} />
-                <Cell index={5} />
-                <Cell index={6} />
-                <Cell index={7} />
-                <Cell index={8} />
+                <Cell
+                  index={0}
+                  handleClick={handleClick}
+                  board={board}
+                  player1Instrument={player1Instrument}
+                  player2Instrument={player2Instrument}
+                />
+                <Cell
+                  index={1}
+                  handleClick={handleClick}
+                  board={board}
+                  player1Instrument={player1Instrument}
+                  player2Instrument={player2Instrument}
+                />
+                <Cell
+                  index={2}
+                  handleClick={handleClick}
+                  board={board}
+                  player1Instrument={player1Instrument}
+                  player2Instrument={player2Instrument}
+                />
+                <Cell
+                  index={3}
+                  handleClick={handleClick}
+                  board={board}
+                  player1Instrument={player1Instrument}
+                  player2Instrument={player2Instrument}
+                />
+                <Cell
+                  index={4}
+                  handleClick={handleClick}
+                  board={board}
+                  player1Instrument={player1Instrument}
+                  player2Instrument={player2Instrument}
+                />
+                <Cell
+                  index={5}
+                  handleClick={handleClick}
+                  board={board}
+                  player1Instrument={player1Instrument}
+                  player2Instrument={player2Instrument}
+                />
+                <Cell
+                  index={6}
+                  handleClick={handleClick}
+                  board={board}
+                  player1Instrument={player1Instrument}
+                  player2Instrument={player2Instrument}
+                />
+                <Cell
+                  index={7}
+                  handleClick={handleClick}
+                  board={board}
+                  player1Instrument={player1Instrument}
+                  player2Instrument={player2Instrument}
+                />
+                <Cell
+                  index={8}
+                  handleClick={handleClick}
+                  board={board}
+                  player1Instrument={player1Instrument}
+                  player2Instrument={player2Instrument}
+                />
               </div>
               <PlayerCard
                 playerNumber={2}

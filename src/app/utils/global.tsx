@@ -4,7 +4,7 @@ export function noteHandler(index: number, instrument: string) {
   const audio = new Audio();
   switch (index) {
     case 0:
-      audio.src = `/samples/tic-tac-toe-${instrument}-C1.mp3`;
+      audio.src = `/samples/tic-tac-toe-${instrument}-C3.mp3`;
       break;
     case 1:
       audio.src = `/samples/tic-tac-toe-${instrument}-E3.mp3`;
@@ -38,10 +38,10 @@ export function noteHandler(index: number, instrument: string) {
 
 export function renderColour(playerNumber: number) {
   if (playerNumber === 1) {
-    return "bg-linear-to-l from-blue-800 to-blue-600 transition-colors duration-500";
+    return "bg-linear-to-t from-blue-800 to-blue-600 transition-colors duration-500";
   }
   if (playerNumber === 2) {
-    return "bg-linear-to-r from-red-800 to-red-600 transition-colors duration-500";
+    return "bg-linear-to-t from-red-800 to-red-600 transition-colors duration-500";
   }
   return "bg-black";
 }
@@ -68,7 +68,7 @@ export function renderIcon(instrument: string, player: number) {
         alt="icon"
         width={100}
         height={100}
-        className={`bg-${player === 1 ? "blue" : "red"}-600`}
+        className={player === 1 ? "bg-linear-to-t from-blue-800 to-blue-600" : "bg-linear-to-t from-red-800 to-red-600"}
       />
     );
   }
@@ -79,7 +79,7 @@ export function renderIcon(instrument: string, player: number) {
         alt="icon"
         width={100}
         height={100}
-        className={`bg-${player === 1 ? "blue" : "red"}-600`}
+        className={player === 1 ? "bg-linear-to-t from-blue-800 to-blue-600" : "bg-linear-to-t from-red-800 to-red-600"}
       />
     );
   }
