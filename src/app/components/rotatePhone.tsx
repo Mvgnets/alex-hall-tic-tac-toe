@@ -11,7 +11,7 @@ export default function RotatePhone() {
         alt="icon"
         width={100}
         height={100}
-        className={"self-center dark:bg-white"}
+        className={"self-center p-2 dark:bg-white"}
       />
     </div>
   );
