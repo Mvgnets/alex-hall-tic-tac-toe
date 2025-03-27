@@ -113,7 +113,7 @@ export default function Home() {
           <div
             className={`${renderColour(
               playerNumber
-            )} rounded shadow-lg shadow-slate-700`}
+            )} rounded shadow-lg shadow-slate-700 dark:shadow-none`}
           >
             <div className="grid grid-cols-5 grid-rows-1 lg:gap-2">
               <PlayerCard
