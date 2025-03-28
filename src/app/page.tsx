@@ -82,6 +82,9 @@ export default function Home() {
     checkWinner();
   }, [board, checkWinner]);
 
+
+  //test
+
   useEffect(() => {
     const checkOrientation = () => {
       const isLandscapeMode = window.matchMedia(
